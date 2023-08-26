@@ -3,7 +3,7 @@ const path = require('path')
 const url = require('url')
 
 
-start3()
+start4()
 
 async function start() {
   let dir = await fs.readdir('.')
@@ -5500,4 +5500,9 @@ async function start3() {
 
 
   console.log(stat.size);
+}
+
+function start4() {
+  let data = require('../modules/test_data.json')
+  fs.writeFileSync('../modules/test_data.json', JSON.stringify(data))
 }
