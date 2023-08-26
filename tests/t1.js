@@ -1,9 +1,9 @@
-const fs = require('fs/promises')
+const fs = require('fs')
 const path = require('path')
 const url = require('url')
 
 
-start2()
+start3()
 
 async function start() {
   let dir = await fs.readdir('.')
@@ -5483,4 +5483,21 @@ function start2() {
 
   fs.writeFile('../modules/test_data.json', JSON.stringify(data, null, 2)) // FIXME debug 
   // fs.writeFile('../modules/test_data.json', JSON.stringify(data))
+}
+
+async function start3() {
+  let logPath = path.join(__dirname, '../log/')
+  let filePath = path.join(__dirname, '../log/', '1.log')
+  
+  let allLog = fs.readdirSync(logPath)
+  let lastFileName = allLog[allLog.length - 1]
+  let lastFilePath = path.join(__dirname, '../log/', lastFileName)
+  let stat = fs.statSync(lastFilePath)
+
+  if (stat.size >= 50) {
+    console.log(123);
+  }
+
+
+  console.log(stat.size);
 }

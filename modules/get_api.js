@@ -2,7 +2,7 @@ const mimeTypes = require('./content_type')
 
 function getApi(req, res, body) {
   let data = require('./test_data.json')
-  console.log(body);
+  // console.log(body);
   
   res.setHeader('Content-Type', mimeTypes.json)
 
