@@ -16,14 +16,31 @@ function serverHandler(req, res) {
     .on('end', () => {
       body = Buffer.concat(body).toString();
 
-      try {
+      let reqType = req.headers['content-type']
+      if (reqType.includes('application/json')) {
         body = JSON.parse(body)
-      } catch (error) {
-        if (body.includes('=')) {
-          let bodyArr = body.split('&')
-          body = bodyArr.reduce((res, item) => {
-            let key = item.split('=')[0]
-            let val = item.split('=')[1]
+      } else if (reqType.includes('application/x-www-form-urlencoded')) {
+        body = body.split('&').reduce((res, item) => {
+          let key = item.split('=')[0]
+          let val = item.split('=')[1]
+          res[key] = val
+          return res
+        }, {})
+      } else if (reqType.includes('multipart/form-data')) {
+        let boundaryIndex = reqType.indexOf('boundary=')
+        if (boundaryIndex !== -1) {
+          let boundary = reqType.slice(boundaryIndex + 9)
+          let tres = body.split(boundary)
+
+          tres = tres.filter(el => el.includes('name'))
+
+          body = tres.reduce((res, item) => {
+            let key = item.match(/name="(.+)"/)[1]
+            let val = item.split('\r\n')[3]
+            val = Number(val) || val
+            if (val === 'true') val = true
+            if (val === 'false') val = false
+
             res[key] = val
             return res
           }, {})
